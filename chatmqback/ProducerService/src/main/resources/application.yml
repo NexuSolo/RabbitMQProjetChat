@@ -1,11 +1,13 @@
+app:
+  message: Message has been sent Successfully..
 spring:
-  profiles:
-    active: usage_message
-
-logging:
-  level:
-    org: ERROR
-
-tutorial:
-  client:
-    duration: 10000
+  rabbitmq:
+    host: localhost
+    password: guest
+    port: 15672
+    username: guest
+    exchange: user.exchange
+    queue: user.queue
+    routingkey: user.routingkey
+server:
+  port: 9091
