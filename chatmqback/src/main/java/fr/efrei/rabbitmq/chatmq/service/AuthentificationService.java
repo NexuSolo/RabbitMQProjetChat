@@ -4,6 +4,8 @@ import java.text.ParseException;
 import java.util.Date;
 import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.nimbusds.jose.EncryptionMethod;
@@ -24,6 +26,9 @@ import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import com.nimbusds.jwt.JWTClaimsSet.Builder;
 
+import fr.efrei.rabbitmq.chatmq.model.User;
+import fr.efrei.rabbitmq.chatmq.repository.UserRepository;
+
 @Service
 public class AuthentificationService {
     public static final int EXPIRATION_TIME = 7200000;
@@ -34,6 +39,11 @@ public class AuthentificationService {
     RSADecrypter decrypter;
     RSASSASigner signer;
     RSASSAVerifier verifier;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     public AuthentificationService() {
         try {
@@ -115,6 +125,23 @@ public class AuthentificationService {
         jweObject.decrypt(decrypter);
         SignedJWT signedJWT = jweObject.getPayload().toSignedJWT();
         return signedJWT.getJWTClaimsSet().getStringClaim("username");
+    }
+
+    public boolean register(User user) {
+        User existingUser = userRepository.findByUsername(user.getUsername());
+        if (existingUser != null) {
+            return false;
+        }
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        return userRepository.save(user);
+    }
+
+    public boolean login(User user) {
+        User existingUser = userRepository.findByUsername(user.getUsername());
+        if (existingUser == null) {
+            return false;
+        }
+        return passwordEncoder.matches(user.getPassword(), existingUser.getPassword());
     }
     
 }
