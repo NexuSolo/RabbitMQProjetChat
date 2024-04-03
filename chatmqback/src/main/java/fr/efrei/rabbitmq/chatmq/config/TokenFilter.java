@@ -19,6 +19,16 @@ public class TokenFilter extends OncePerRequestFilter  {
 
     @Override
     public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) {
+        String method = request.getMethod();
+        if (method.equals("OPTIONS")) {
+            try {
+                filterChain.doFilter(request, response);
+            } catch (Exception e) {
+                e.printStackTrace();
+                response.setStatus(500);
+            }
+            return;
+        }
         String path = request.getRequestURI();
         log.info("Request to {}", path);
         if (path.equals("/auth/register")) {
