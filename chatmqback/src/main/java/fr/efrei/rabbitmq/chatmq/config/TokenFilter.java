@@ -1,6 +1,8 @@
 package fr.efrei.rabbitmq.chatmq.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -21,6 +23,8 @@ public class TokenFilter extends OncePerRequestFilter  {
         String path = request.getRequestURI();
         if (path.equals("/auth/register")) {
             try {
+                Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+                System.out.println(auth);
                 filterChain.doFilter(request, response);
             } catch (Exception e) {
                 e.printStackTrace();
