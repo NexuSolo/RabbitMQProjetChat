@@ -1,4 +1,4 @@
-package fr.efrei.rabbitmq.chatmq.service;
+package fr.efrei.rabbitmq.chatmq.model;
 
 import lombok.Data;
 
@@ -6,5 +6,9 @@ import lombok.Data;
 public class User {
     private String username;
     private String password;
+
+    public String getUsername() {
+        return username;
+    }
     
 }
