@@ -5,17 +5,13 @@ import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFacto
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.google.common.collect.ImmutableMap;
 
 @Configuration
 public class RabbitConfig {
     
     @Bean
-    public Queue chatQueue() {
-        return new Queue("chat.queue", true, false, false, 
-                         new ImmutableMap.Builder<String, Object>()
-                            .put("x-max-length", 20)
-                            .build());
+    public Queue queue() {
+        return new Queue("chat.queue", false);
     }
 
     @Bean

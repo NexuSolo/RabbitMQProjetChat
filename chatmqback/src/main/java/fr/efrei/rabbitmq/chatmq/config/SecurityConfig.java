@@ -30,6 +30,7 @@ public class SecurityConfig {
                 .addFilterBefore(tokenFilter, SecurityContextHolderFilter.class)
                 .authorizeHttpRequests(auth -> auth
                 .requestMatchers("auth/register").permitAll()
+                .requestMatchers("send").permitAll()
                 .anyRequest().denyAll())
                 .build();
     }
