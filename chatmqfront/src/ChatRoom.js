@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import socketIOClient from 'socket.io-client';
+import './ChatRoom.css';
 
 const ChatRoom = ({ username }) => {
   const [messages, setMessages] = useState([]);
@@ -8,20 +9,19 @@ const ChatRoom = ({ username }) => {
 
   useEffect(() => {
     const newSocket = socketIOClient('http://localhost:3001');
-  
+
     newSocket.on('message', (newMessage) => {
       setMessages([...messages, newMessage]);
     });
-  
+
     newSocket.emit('join', { username });
-  
+
     setSocket(newSocket);
-  
+
     return () => {
       newSocket.disconnect();
     };
-  }, [messages, username]); // Ajoutez messages dans le tableau des dépendances
-  
+  }, [messages, username]);
 
   const handleMessageSend = () => {
     socket.emit('sendMessage', { username, message: messageInput });
@@ -29,25 +29,36 @@ const ChatRoom = ({ username }) => {
   };
 
   const handleLogout = () => {
-    // Déconnectez-vous en supprimant le nom d'utilisateur stocké
     localStorage.removeItem('username');
-    // Redirigez vers la page de connexion
     window.location.href = '/';
   };
 
   return (
-    <div>
-      <button onClick={handleLogout}>Logout</button> {/* Bouton de déconnexion */}
-      <div>
-        {messages.map((msg, index) => (
-          <div key={index}>
-            <span>{msg.username}:</span>
-            <span>{msg.message}</span>
+
+    <div className='chatroom'>
+      <button onClick={handleLogout} className="logout-button">Logout</button>
+      <div className="chat-room-container">
+        <div className="message-container">
+          {messages.map((msg, index) => (
+            <div key={index} className={`message ${msg.username === username ? 'own-message' : ''}`}>
+              <span className="username">{msg.username}:</span>
+              <span className="message-content">{msg.message}</span>
+            </div>
+          ))}
+        </div>
+        <div className="input-container">
+          <input
+            type="text"
+            value={messageInput}
+            onChange={(e) => setMessageInput(e.target.value)}
+            placeholder="Ecrire un message..."
+            className="message-input"
+          />
+          <div className="send-button-container">
+            <img onClick={handleMessageSend} src="send.png" alt="Send" className="send-button" />
           </div>
-        ))}
+        </div>
       </div>
-      <input type="text" value={messageInput} onChange={(e) => setMessageInput(e.target.value)} />
-      <button onClick={handleMessageSend}>Send</button>
     </div>
   );
 };

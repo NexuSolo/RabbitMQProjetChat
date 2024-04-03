@@ -7,7 +7,7 @@ const Login = ({ onLogin }) => {
     const [password, setPassword] = useState('');
 
     const handleLogin = () => {
-        const socket = socketIOClient('http://localhost:8080');
+        const socket = socketIOClient('http://localhost:8080/auth/register');
         socket.emit('login', { username });
         onLogin();
     };
