@@ -1,8 +1,6 @@
 package fr.efrei.rabbitmq.chatmq.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -10,21 +8,21 @@ import fr.efrei.rabbitmq.chatmq.service.AuthentificationService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 
 @Component
+@Slf4j
 public class TokenFilter extends OncePerRequestFilter  {
 
     @Autowired
     private AuthentificationService authentificationService;
 
-    @SuppressWarnings("null")
     @Override
     public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) {
         String path = request.getRequestURI();
+        log.info("Request to {}", path);
         if (path.equals("/auth/register")) {
             try {
-                Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-                System.out.println(auth);
                 filterChain.doFilter(request, response);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -38,9 +36,11 @@ public class TokenFilter extends OncePerRequestFilter  {
                 if (authentificationService.verifyToken(token)) {
                     filterChain.doFilter(request, response);
                 } else {
+                    System.err.println("Invalid token");
                     response.setStatus(401);
                 }
             } else {
+                System.err.println("No token");
                 response.setStatus(401);
             }
         } catch (Exception e) {
