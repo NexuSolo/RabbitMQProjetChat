@@ -1,32 +1,25 @@
 package fr.efrei.rabbitmq.chatmq.controller;
 
-import org.springframework.amqp.core.Queue;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 
 import fr.efrei.rabbitmq.chatmq.model.Message;
+import fr.efrei.rabbitmq.chatmq.service.Producer;
 
 @RestController
 public class MessageController {
 
     @Autowired
-	private RabbitTemplate template;
-
-    @Autowired
-    private Queue queue;
-
+    private Producer producer;
 
     @PostMapping("/send")
-    public void sendMessage(@RequestBody Message message) {
-        this.template.convertAndSend(queue.getName(), message.toString());
+    public ResponseEntity<?> sendMessage(@RequestBody Message message) {
+        producer.sendMessage(message);
+        return ResponseEntity.ok().build();
     }
 
-    // @RabbitListener(queues = "chat.queue")
-    // public void listen(Message message) {
-    //     System.out.println("Received a message: " + message.getContent());
-    // }
 }

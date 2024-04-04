@@ -19,6 +19,6 @@ services:
   front:
     build: ./chatmqfront
     ports:
-      - "3400:3400"
+      - "3000:3000"
     depends_on:
       - back
