@@ -1,5 +1,7 @@
 package fr.efrei.rabbitmq.chatmq.config;
 
+import java.util.Collections;
+
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
@@ -13,7 +15,7 @@ public class RabbitConfig {
    
     @Bean
     public Queue queue() {
-        return new Queue("chat.queue", false);
+        return new Queue("chat.queue", true, false, false, Collections.singletonMap("x-queue-type", "stream"));
     }
 
     @Autowired
