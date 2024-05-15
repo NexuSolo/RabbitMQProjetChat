@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSocket Test</title>
+</head>
+<body>
+    <h1>WebSocket Test</h1>
+
+    <!-- Form to specify WebSocket username and message -->
+    <form id="websocketForm">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username">
+        <label for="message">Message:</label>
+        <input type="text" id="message" name="message">
+        <button type="submit">Send</button>
+    </form>
+    <button onclick="disconnect()">Disconnect</button>
+
+    <!-- JavaScript to handle form submission -->
+    <script>
+        var websocket;
+        // Function to handle WebSocket form submission
+        document.getElementById("websocketForm").addEventListener("submit", async function(event) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            const username = formData.get("username");
+            const message = formData.get("message");
+
+            // Connect to WebSocket endpoint
+            websocket = new WebSocket(`ws://localhost:8000/ws/${username}`);
+
+            websocket.onopen = function() {
+                console.log(`Connected to WebSocket server as ${username}`);
+                // Send message to WebSocket server
+                websocket.send(message);
+            };
+
+            websocket.onmessage = function(event) {
+                console.log("Message received from server:", event.data);
+            };
+
+            websocket.onerror = function(event) {
+                console.error("WebSocket error:", event);
+            };
+
+            websocket.onclose = function() {
+                console.log("Disconnected from WebSocket server");
+            };
+        });
+
+        // Function to disconnect WebSocket
+        function disconnect() {
+            websocket.close();
+            console.log("Disconnected from WebSocket server");
+        }
+
+
+    </script>
+</body>
+</html>
