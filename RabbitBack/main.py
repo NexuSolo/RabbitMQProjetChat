@@ -26,9 +26,9 @@ connection = pika.BlockingConnection(parameters)
 channel = connection.channel()
 
 # Déclaration de l'échange et de la file d'attente
-channel.exchange_declare(exchange='chat', exchange_type='direct')
-channel.queue_declare(queue='chatroom', durable=True)
-channel.queue_bind(exchange='chat', queue='chatroom', routing_key='')
+channel.exchange_declare(exchange='chat', exchange_type='fanout')
+result = channel.queue_declare(queue='chatroom', durable=True)
+channel.queue_bind(exchange='chat', queue=result.method.queue, routing_key='')
 
 user_manager = UserManager()
 
@@ -41,6 +41,8 @@ def handle_connect():
         if username is None:
             raise ValueError("Username is required")
         user_manager.connect(user_id, username)
+        thread = threading.Thread(target=start_consuming)
+        thread.start()
     except Exception as e:
         print(f"Error during connection: {str(e)}")
 
@@ -80,6 +82,4 @@ def start_consuming():
     channel.start_consuming()
 
 if __name__ == '__main__':
-    thread = threading.Thread(target=start_consuming)
-    thread.start()
     socketio.run(app, debug=True, allow_unsafe_werkzeug=True)
