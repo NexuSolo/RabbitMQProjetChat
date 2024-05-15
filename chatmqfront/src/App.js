@@ -1,21 +1,19 @@
-import React, { useState } from 'react';
+// App.js ou index.js
+
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from './Login';
-import ChatRoom from './ChatRoom';
+import Chatroom from './ChatRoom';
 
-const App = () => {
-  const [loggedIn, setLoggedIn] = useState(false);
-  const [username, setUsername] = useState('');
-
-  const handleLogin = (username) => {
-    setLoggedIn(true);
-    setUsername(username);
-  };
-
+function App() {
   return (
-    <div>
-      {!loggedIn ? <Login onLogin={handleLogin} /> : <ChatRoom username={username} />}
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Login />} />
+        <Route path="/chatroom" element={<Chatroom />} />
+      </Routes>
+    </Router>
   );
-};
+}
 
 export default App;

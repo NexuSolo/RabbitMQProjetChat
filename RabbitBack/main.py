@@ -36,6 +36,7 @@ user_manager = UserManager()
 def handle_connect():
     try:
         user_id = request.sid
+        print(request.args)
         username = request.args.get('username')  # Supposons que le nom d'utilisateur est passé en tant que paramètre de requête
         if username is None:
             raise ValueError("Username is required")
