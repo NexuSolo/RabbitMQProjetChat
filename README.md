@@ -1,9 +1,9 @@
 # Projet RabbitMQ
 
-## Lancement du front
+## Lancement de RabbitMQ
 
-> Dans le dossier *frontangular* :  
-> Lancer la commande : ng serve
+> Dans le dossier principal :  
+> Lancer la commande *docker compose up*
 
 ## Lancement du back
 
@@ -11,10 +11,11 @@
 > Installation des modules : *pip install -r requirements.txt*  
 > Lancer la commande : *python -u ./main.py*
 
-## Lancement de RabbitMQ
+## Lancement du front
 
-> Dans le dossier principal :  
-> Lancer la commande *docker compose up*
+> Dans le dossier *frontangular* :  
+> Lancer la commande : npm install
+> Lancer la commande : ng serve
 
 ### Membres du groupe
 
