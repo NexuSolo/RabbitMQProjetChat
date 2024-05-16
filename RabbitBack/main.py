@@ -1,9 +1,8 @@
 from datetime import datetime
-import threading
-import time
-from flask import Flask, render_template, request
+from flask import Flask, request
 from flask_socketio import SocketIO, emit
 from message import Message
+import threading
 import pika
 import json
 
