@@ -1,0 +1,16 @@
+<div class='login'>
+    <div class='login-logo'>
+        <img class='logo-img' src="assets/message.png" alt="Logo" />
+    </div>
+    <form (submit)="onSubmit()" [formGroup]="formulaire">
+        <div class='login-input'>
+            <div class='username-area'>
+                <h4>Nom d'utilisateur</h4>
+                <input type="text" placeholder="Exemple : Nexus" formControlName="username" />
+            </div>
+        </div>
+        <div class='login-button-area'>
+            <button type="submit">Se connecter</button>
+        </div>
+    </form>
+</div>
